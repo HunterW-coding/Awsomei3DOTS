@@ -1,0 +1,144 @@
+## Basic i3 Configuration Template
+
+# Set Mod Key (Mod4 is usually the Super/Windows key)
+set $mod Mod4
+set $smod Shift
+
+# Font for window titles
+font pango:Source Sans Pro, Semibold 11
+
+# Gaps and Borders
+set $gap_size 15
+set $border_size 2
+
+# Define arrow keys for navigation
+set $left Left
+set $down Down
+set $up Up
+set $right Right
+
+# Applications
+set $terminal alacritty
+set $browser firefox
+set $launcher rofi -show drun
+set $compositor picom
+
+# Colors (Nordic theme)
+set $bg-color #2E3440
+set $inactive-bg-color #3B4252
+set $text-color #D8DEE9
+set $active-border-color #81A1C1
+set $inactive-border-color #3B4252
+
+# Use Mouse+$mod to move floating windows
+floating_modifier $mod
+
+# Window borders
+default_border pixel $border_size
+default_floating_border pixel $border_size
+smart_borders on
+
+# Gaps
+gaps inner $gap_size
+gaps outer 0
+smart_gaps on
+
+# Keybindings
+# Open terminal
+bindsym $mod+Return exec $terminal
+
+# Open browser
+bindsym $mod+$smod+Return exec $browser
+
+# Open application launcher
+bindsym $mod+d exec $launcher
+
+# Close focused window
+bindsym $mod+Shift+q kill
+
+# Change focus between windows
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Move focused window
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+# Split layout
+bindsym $mod+v split v
+bindsym $mod+h split h
+
+# Toggle fullscreen
+bindsym $mod+f fullscreen toggle
+
+# Toggle floating
+bindsym $mod+Shift+space floating toggle
+
+# Change workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+
+# Move window to workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+
+# Restart i3 without logging out
+bindsym $mod+Shift+r restart
+
+# Exit i3
+bindsym $mod+Shift+e exec --no-startup-id i3-nagbar -t warning -m 'Exit i3?' -b 'Yes, exit' 'i3-msg exit'
+
+# Autostart applications
+exec --no-startup-id feh --bg-scale ~/Pictures/example.png
+exec --no-startup-id nm-applet
+exec --no-startup-id $compositor --experimental-backends
+
+# Status bar configuration
+bar {
+    status_command i3status
+    position bottom
+    font pango:Source Sans Pro, Semibold 11
+    separator_symbol " - "
+    colors {
+        background $inactive-bg-color
+        statusline $text-color
+        separator $text-color
+        focused_workspace  $active-border-color $bg-color $text-color
+        active_workspace   $inactive-bg-color $bg-color $text-color
+        inactive_workspace $inactive-bg-color $bg-color $text-color
+        urgent_workspace   $inactive-bg-color $bg-color $text-color
+    }
+}
+
+# Resize mode
+mode "resize" {
+    bindsym $left  resize shrink width 10 px or 10 ppt
+    bindsym $down  resize grow height 10 px or 10 ppt
+    bindsym $up    resize shrink height 10 px or 10 ppt
+    bindsym $right resize grow width 10 px or 10 ppt
+
+    # Resize gaps
+    bindsym $smod+$left  gaps horizontal minus 5
+    bindsym $smod+$down  gaps horizontal plus 5
+    bindsym $smod+$up    gaps vertical minus 5
+    bindsym $smod+$right gaps vertical plus 5
+
+    # Back to normal mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Uncomment the following lines if the corresponding applications are installed
+# exec --no-startup-id $compositor --experimental-backends
+# exec --no-startup-id $launcher
